@@ -18,7 +18,6 @@ I'm an engineering-minded maker exploring **aerospace, robotics, audio, signal p
 | Project | What I'm exploring | Stage |
 |---|---|---|
 | [**GravBox**](https://github.com/code8286/gravbox) | An interactive N-body gravity simulator for desktop and web, with multiple integrators, a live energy-drift indicator, 3D viewing, and room for up to 100,000 bodies. | Built · [Try it in your browser](https://code8286.github.io/GravBox/) |
-| [**N-Body Simulator**](https://github.com/code8286/nbody-simulator) | A smaller interactive sandbox for gravitational systems, orbit trails, 3D viewing, and exporting simulation data. | Built · [Web demo](https://code8286.github.io/nbody-simulator/) |
 | **MedBot+** | A medication-assistance robot prototype combining mobile-robot navigation, obstacle sensing, pickup verification, and a return-to-base workflow. The project includes ESP8266 firmware, a web client/server, and PID experiments. | Hardware prototype · iterative testing |
 | **Active Thrust Vector Control** | A model-rocket control project exploring a two-axis motor gimbal, attitude sensing, and closed-loop control, with simulation and staged hardware validation. | Design and planning |
 | **Morse Analyser** | A Python audio-analysis tool for decoding Morse timing and investigating possible steganographic signals. | Code prototype |
