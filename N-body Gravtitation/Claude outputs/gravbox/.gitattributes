@@ -1,0 +1,4 @@
+# Normalise line endings in the repo; check out native endings on each OS.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
