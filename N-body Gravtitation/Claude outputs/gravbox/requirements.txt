@@ -1,3 +1,0 @@
-pygame>=2.1
-numpy>=1.22
-PyOpenGL>=3.1.6
