@@ -33,40 +33,11 @@ I'm an undergraduate engineering student exploring **aerospace, analog and digit
 
 <br>
 
-> Interactive desktop sandbox and browser demo for the gravitational N-body problem — from 2-body Keplerian orbits to 100,000-body galaxy collisions.
+Interactive N-body gravity simulator for desktop and browser. Implements five numerical integrators including adaptive **RK45 (Dormand–Prince)** with PI step-size control and a **time-symmetric adaptive leapfrog** for close-encounter refinement. A numpy-vectorised **Barnes–Hut octree** (Morton linear encoding, batched matmul force kernel) runs ≈ 57× faster than the direct sum at 100k bodies with ~4 × 10⁻⁴ median force error. A live energy-drift **trust indicator** grades integration quality in real time.
 
-**Integrators**
+The browser build offloads physics to a **Web Worker** backed by a **WebAssembly core** compiled from C (`gravcore.c`, 1.9 KB); numpy parity verified via fixture tests. No build step — deployed to GitHub Pages as-is.
 
-| Name | Type | Notes |
-|---|---|---|
-| Euler | Fixed-step | Baseline |
-| Leapfrog | Symplectic fixed-step | Default — energy-conservative |
-| RK4 | Fixed-step 4th-order | — |
-| RK45 (Dormand–Prince) | Adaptive, error-controlled | PI step-size control, dense output |
-| Adaptive leapfrog | Time-symmetric | Close-encounter auto-refinement |
-
-**Barnes–Hut octree** (optional, toggled per preset)
-
-| N (bodies) | Direct sum | Barnes–Hut (θ = 0.5) | Speedup | Median force error |
-|---|---|---|---|---|
-| 100 000 | ~105 s | ~1.84 s | **≈ 57×** | ~4 × 10⁻⁴ |
-
-**Web build** — `web/`, vanilla JS, no build step, deployed to GitHub Pages
-
-```
-Browser main thread  (rendering, UI)
-       │
-  Web Worker  ←──────────────────────────────────┐
-       │                                          │
-  GravCoreWasm  (gravcore.c → .wasm, 1.9 KB)   GravCoreJS  (JS fallback)
-  numpy parity verified via fixture tests
-```
-
-**WIP — GPU acceleration** (`WIP/gpu-acceleration/`)
-- WebGPU backend (WGSL direct-sum shader, verified on SwiftShader) → `wgpu-py` / CuPy desktop path
-- Precision rule locked: **float32 forces + float64 state** (float32-only degrades energy drift ~1000×)
-- Neural force surrogates only beneficial past ~10⁶ bodies; not planned before then
-- FMM vs Barnes–Hut at 500k–1M bodies benchmark in progress
+**WIP:** WebGPU direct-sum backend (WGSL shader, SwiftShader-verified) targeting a `wgpu-py` / CuPy desktop path. Precision constraint established: **float32 forces + float64 state** (float32-only state degrades energy drift ~1000×). FMM vs Barnes–Hut benchmarking at 500k–1M bodies in progress.
 
 </details>
 
@@ -77,35 +48,16 @@ Browser main thread  (rendering, UI)
 
 <br>
 
-> ESP8266-based mobile robot that navigates autonomously to a patient, verifies medication pickup via IR sensing, avoids obstacles, and returns to a parking position. Hospital deployment vision: a React/Node central dashboard managing a fleet.
+ESP8266-based mobile robot for medication delivery in healthcare settings. Navigation uses **RSSI log-distance path-loss ranging** combined with **MPU6050 gyro-Z heading hold** for a hill-climbing approach heuristic; medication pickup is verified via analog IR thresholding; obstacle avoidance runs an HC-SR04 on a sweep servo. Return-to-park uses IMU dead-reckoning cross-checked against RSSI. Full-stack hospital deployment vision: **React + Vite** client over a **Node.js / SQLite** multi-bot dashboard.
 
-**Subsystem status**
+Production comms use **ESP-NOW** peer-to-peer ranging between ESP8266 nodes — currently substituted with phone-hotspot RSSI after a hardware fault on the second ESP. Voice prompts (DFPlayer Mini) deferred on GPIO pin budget; all cue points exercise the same state-machine timing paths via Serial log lines so the logic is testable now.
 
-| Subsystem | Implementation | State |
-|---|---|---|
-| Motor control | 12V DC H-bridge; PWM-on-direction-pins | ✅ |
-| Navigation / approach | RSSI hill-climbing heuristic + MPU6050 heading hold | ✅ |
-| Obstacle avoidance | HC-SR04 on sweep servo; stop-and-turn | ✅ |
-| IMU / heading | MPU6050 raw I2C; gyro-Z integration | ✅ (drifts — prototype-grade) |
-| Medicine pickup detect | Analog IR; Dark/Bright threshold | ✅ |
-| Return-to-park | IMU dead-reckoning cross-checked against RSSI | ✅ |
-| Checkpoint comms | ESP-NOW (production target) | 🔧 Blocked — USB-serial chip dead |
-| Checkpoint comms | Phone hotspot RSSI substitute | ⚠️ Current active test |
-| Voice prompts | DFPlayer Mini + speaker | ⏸️ Deferred — GPIO pin budget |
-| Web dashboard | React + Vite client · Node/SQLite server | 🔧 In progress |
-
-**Communication history**
-```
-Production target:
-  Bot ESP8266  ←── ESP-NOW ──→  Checkpoint ESP8266
-                                (log-distance path-loss RSSI ranging)
-
-Active substitute (second ESP8266 USB-serial unrecoverable):
-  Bot ESP8266  ←── Wi-Fi RSSI ──→  Phone hotspot
-               Same path-loss model · single-checkpoint only · not production
-```
-
-**Next:** replace failed ESP8266 · PCF8574 I2C GPIO expander or migrate to ESP32 for DFPlayer · complete multi-bot hospital dashboard
+| Layer | Status |
+|---|---|
+| Navigation · obstacle avoidance · IR pickup · return-to-park | ✅ Implemented |
+| ESP-NOW checkpoint comms (production path) | 🔧 Blocked — hardware fault |
+| React / Node hospital dashboard | 🔧 In progress |
+| DFPlayer voice prompts | ⏸️ Deferred — GPIO budget |
 
 </details>
 
@@ -116,44 +68,15 @@ Active substitute (second ESP8266 USB-serial unrecoverable):
 
 <br>
 
-> Servo-actuated two-axis (pitch/yaw) motor gimbal driven by a closed-loop PID controller, prototyped and tuned in Python, then deployed to MCU firmware. Three progressive hardware phases.
+Active TVC system for a model rocket: a **servo-actuated two-axis (pitch/yaw) motor gimbal** driven by a closed-loop PID controller. The control law is developed and tuned in a **6-DOF Python simulation** then deployed to MCU firmware on a hardware-timed interrupt loop; IMU attitude fused via complementary / lightweight Kalman filter. Three hardware phases — static tethered test fires → drone-lift free-fall drop tests → guided powered ascent with in-flight retasking and controlled descent. 3D-printed gimbal hardware (TVC_v1 STLs + gcode) exists; Phase I is current.
 
-**Phase roadmap**
-
-```
-╔══════════════════════════════════════════════════════════════════════╗
-║  PHASE I — Perfecting TVC                              [CURRENT]    ║
-╠══════════════════════════════════════════════════════════════════════╣
-║  Build:    cross/yoke gimbal on low-friction bearings               ║
-║  Sense:    MPU6050 → complementary / lightweight Kalman filter      ║
-║  Control:  PID tuned in Python → MCU hardware-timed ISR firmware    ║
-║  Validate: static tethered motor burns; minimise attitude error     ║
-╠══════════════════════════════════════════════════════════════════════╣
-║  PHASE II — Dynamic Simulation                                      ║
-╠══════════════════════════════════════════════════════════════════════╣
-║  Test:     drone-lift free-fall drop tests (inert mass first)       ║
-║  Detect:   freefall via accelerometer near-zero net-accel debounce  ║
-║  Sim:      6-DOF Python model pre-validates gains before drops      ║
-║  Validate: landing-coordinate error across repeated trials          ║
-╠══════════════════════════════════════════════════════════════════════╣
-║  PHASE III — Launch & Controlled Descent                            ║
-╠══════════════════════════════════════════════════════════════════════╣
-║  Fly:      guided powered ascent on pre-set roll/pitch/yaw profile  ║
-║  ReTask:   in-flight command via two-way telemetry link             ║
-║  Land:     controlled descent to target landing zone                ║
-║  Extend:   altitude envelope + telemetry/science payloads           ║
-╚══════════════════════════════════════════════════════════════════════╝
-```
-
-**Open architectural decisions** — must be locked before Phase I hardware is finalised
-
-| Decision | Option A | Option B |
+| Phase | Objective | State |
 |---|---|---|
-| Roll authority | Servo-actuated fin tabs (active) | Canted fins (passive damping) |
-| Descent propulsion | TVC-guided ballistic + parachute | Timed landing burn (suicide burn) |
-| Dev surrogate | Throttleable hybrid / EDF / cold-gas | — |
+| I — Perfecting TVC | Static tethered burns; minimise closed-loop attitude error | 📐 Current |
+| II — Dynamic Simulation | Drone-lift free-fall drops; landing-coordinate error characterisation | — |
+| III — Launch & Descent | Guided ascent · in-flight retask · controlled descent to target | — |
 
-**Long-term:** scale to supersonic-class vehicles · higher-bandwidth control surfaces · larger payload capacity
+Open decisions before hardware lock: **roll authority** (active fin tabs vs passive canted fins) and **descent propulsion architecture** (ballistic + chute vs timed landing burn). Long-term target: scale to supersonic-class vehicles.
 
 </details>
 
@@ -164,31 +87,9 @@ Active substitute (second ESP8266 USB-serial unrecoverable):
 
 <br>
 
-> Self-contained C++17 toolkit with zero third-party dependencies. Encodes text as Morse audio and hides a steganographic payload in inter-gap timing. Analyses a WAV file to decode both the visible Morse and the hidden carrier-gap payload.
+Self-contained C++17 toolkit — zero third-party dependencies. All numerical code (WAV I/O, FFT, Hilbert transform, zero-phase Butterworth filter, STFT, k-means, PNG/SVG output) implemented from scratch in `morse_lib/`.
 
-**Analyser pipeline**
-```
-WAV input  (PCM 8/16/24/32-bit or float 32/64-bit; multi-channel → mono)
-    │
-    ▼
-Hilbert envelope  →  20 Hz zero-phase Butterworth low-pass
-    │
-    ▼
-Percentile threshold  →  tone-burst segmentation
-    │
-    ├──► Visible Morse decode  (dot/dash timing → ASCII)
-    └──► Inter-gap timing  →  3-means unit estimation
-              └──► Carrier-gap steganographic payload  (normal + reversed)
-                         └──► CSV · SVG envelope plot · PNG spectrogram
-```
-
-| Binary | Role | Platform |
-|---|---|---|
-| `morse-encoder` | Text → Morse WAV; embeds payload in inter-gap timing | Cross-platform |
-| `morse-analyser` | Decodes visible Morse + hidden payload | Cross-platform |
-| `morse-gui` | Win32 GUI joining both tabs | Windows |
-
-All DSP (WAV I/O, FFT, Hilbert, Butterworth, STFT, k-means, PNG/SVG) lives in `morse_lib/`. Original Python prototype in `origin/`.
+The **encoder** synthesises Morse WAV audio and hides a payload in inter-gap timing (carrier-gap steganography scheme). The **analyser** inverts this: Hilbert envelope → zero-phase 20 Hz Butterworth → percentile threshold → tone-burst extraction → 3-means unit estimation → simultaneous visible Morse decode and steganographic payload recovery. Ships as a cross-platform CLI pair and a plain **Win32 GUI** joining both.
 
 </details>
 
@@ -201,41 +102,20 @@ All DSP (WAV I/O, FFT, Hilbert, Butterworth, STFT, k-means, PNG/SVG) lives in `m
 
 <br>
 
-> C++20 application acting as a system-wide virtual soundcard: WASAPI loopback capture of the default render endpoint, a real-time DSP chain, and near-zero-latency passthrough to the physical output device.
-
-**Signal chain**
-```
-System audio  (default Windows render endpoint)
-    │
-WASAPI Loopback Capture  (IAudioClient + IAudioCaptureClient)
-    │
-Lock-free ring buffer  (std::atomic / JUCE AbstractFifo)
-    │
-DSP Engine  [audio thread — zero heap allocation on hot path]
-    ├── 9-band Graphic EQ          juce::dsp::IIR::Filter
-    ├── Timbre Exciter             Linkwitz-Riley crossover → harmonic generation above 4 kHz
-    ├── Volume Maximiser           Lookahead brickwall limiter + soft-knee compressor
-    └── Psychoacoustic Bass Enh.   Sub-120 Hz isolation → upper harmonic generation
-    │
-IAudioRenderClient  (physical hardware endpoint)
-    │
-GUI thread  (JUCE APVTS · power toggle · vertical sliders · 30 FPS FFT visualiser)
-```
-
-**Status:** full engineering spec and module breakdown complete · no code yet
+C++20 application acting as a system-wide virtual soundcard. **WASAPI loopback capture** feeds a real-time DSP chain — zero heap allocation on the audio thread — before output via `IAudioRenderClient`. Chain: 9-band IIR graphic EQ · **Linkwitz-Riley crossover timbre exciter** (harmonic generation above 4 kHz) · lookahead brickwall limiter + soft-knee compressor · **psychoacoustic bass enhancer** (sub-120 Hz upper-harmonic generation). State managed via **JUCE APVTS**; 30 FPS FFT spectrum visualiser over a lock-free FIFO on the GUI thread. Full engineering spec and module breakdown written. No code yet.
 
 </details>
 
 <details>
-<summary><strong>🧠 Upcoming — concepts queued</strong></summary>
+<summary><strong>🧠 Concepts queued</strong></summary>
 
 <br>
 
-| Project | Description |
+| Project | Note |
 |---|---|
 | **DIY Neural Network** | From-scratch implementation — architecture TBD |
 | **DIY Search Engine** | Custom indexing and retrieval pipeline — architecture TBD |
-| **Ring Mouse** | Wearable ring device for finger-gesture and movement tracking — hardware TBD |
+| **Ring Mouse** | Wearable ring tracking finger gestures and movement — hardware TBD |
 
 </details>
 
@@ -248,40 +128,11 @@ GUI thread  (JUCE APVTS · power toggle · vertical sliders · 30 FPS FFT visual
 
 <br>
 
-> Stochastic nonlinear dynamical model of human pluripotent stem-cell fate. Two-axis reduction of the OCT4–SOX2–NANOG–GATA6–PAX6 circuit with Hill-type cooperative regulation, a Chemical Langevin Equation ensemble, Newton–Raphson fixed-point search, bifurcation sweeps, and Waddington quasi-potential reconstruction.
+Stochastic nonlinear dynamical model of human pluripotent stem-cell fate. The OCT4–SOX2–NANOG–GATA6–PAX6 circuit is reduced to a two-axis **P / D** system (pluripotency vs differentiation) with Hill-type cooperative activation/repression and a **Chemical Langevin Equation** stochastic layer. Built and numerically validated end-to-end in GNU Octave 8.4.0 — no external packages, ~70 s runtime.
 
-**State-space reduction**
-```
-Full 5-node circuit:  OCT4 – SOX2 – NANOG – GATA6 – PAX6
-            ↓  (deliberate dimensionality reduction)
-  P  — pluripotency axis    (OCT4 / SOX2 / NANOG cluster)
-  D  — differentiation axis (GATA6 / PAX6-type lineage repressors)
+Key results: Newton–Raphson fixed-point search recovers **genuine tristability** (3 stable + 2 saddle fixed points at κ = 1.6); κ-bifurcation sweep shows tristability robust for κ ≳ 0.6 across a >4× parameter range with a pitchfork-type stability-exchange near κ ≈ 0.38 bracketed by two saddle-node annihilations — richer than the textbook single-pitchfork picture. **Waddington quasi-potential** reconstructed from a 70-trajectory CLE ensemble; Hessian curvature cross-checked via exact **Lyapunov route** (stable wells) and empirical histogram route — discrepancy attributed to finite-bin + kernel smoothing, documented explicitly.
 
-  dP/dt = aP · H⁺(P) · H⁻(κD)  −  gP·P  +  bP
-  dD/dt = aD · H⁺(D) · H⁻(κP)  −  gD·D  +  bD
-```
-
-**Validated results** — GNU Octave 8.4.0, ~70 s runtime, no external packages
-
-| Module | Result |
-|---|---|
-| Fixed-point search | 5 fixed points: **3 stable** (pluripotent · differentiated · uncommitted) + **2 saddle** |
-| κ-bifurcation sweep | Tristability robust for κ ≳ 0.6 to 2.6; pitchfork-type exchange at κ ≈ 0.38 bracketed by two saddle-node annihilations |
-| CLE stochastic ensemble | 70 trajectories (5 seeds × 14 replicates · 6 000 Euler–Maruyama steps) |
-| Waddington quasi-potential | U ∈ [0, 10.39]; three deep basins confirmed at stable fixed points |
-| Hessian cross-check | Lyapunov exact (wells) vs empirical histogram — qualitative agreement; magnitude discrepancy documented and attributed to finite-bin + kernel smoothing |
-
-**Computational hierarchy**
-```
-Level 0  Boolean / multistate topology check
-Level 1  Deterministic ODE — parameter screening         ✅ implemented
-Level 2  Chemical Langevin (CLE) — stochastic ensemble   ✅ implemented
-Level 3  Promoter ON/OFF bursting model
-Level 4  Gillespie SSA / tau-leaping (low copy-number)
-Level 5  Population model (division · clonal selection)
-```
-
-**Next:** explicit GATA6 third axis · bursting-aware CLE (Kursawe–Galla 2025) · L1-regularised W from single-cell multiomics · transition-path barrier heights → iPSC reprogramming first-passage times
+**Next:** explicit GATA6 third axis · bursting-aware CLE (Kursawe–Galla 2025) · L1-regularised **W** from scRNA-seq + scATAC-seq · transition-path barrier heights → iPSC reprogramming first-passage times.
 
 </details>
 
@@ -290,46 +141,9 @@ Level 5  Population model (division · clonal selection)
 
 <br>
 
-> 5-layer hybrid system combining physics-based differentiable cellular automata (GPU-accelerated via PyTorchFire) with a graph neural network for spot-fire and spread corrections, real-time gradient-descent calibration against satellite observations, and an operational decision-support output layer.
+5-layer hybrid wildfire prediction system fusing USGS DEM terrain, LANDFIRE fuel models, NOAA NDFD weather, and NASA FIRMS satellite hotspots. A **differentiable cellular automaton** (PyTorchFire, GPU) implements the Rothermel spread model with Huygens elliptical anisotropy; a lightweight **Graph Attention Network** (~30–50k params) runs in parallel on an adaptive quad-tree mesh (250 m → 60 m near fire front, 60–70% memory saving vs uniform grid) to output per-node spot-fire probability, spread-speed correction, and direction bias — recovering **~75–80% spot-fire recall vs ~40% for CA alone**. **Real-time gradient-descent calibration** fits Rothermel R₀ to satellite fire boundaries (IoU + Hausdorff loss) in under 2 min on an A100.
 
-**5-layer architecture**
-```
-Layer 1 — Input Fusion
-    USGS DEM (30 m) · LANDFIRE fuel (30–240 m) · NOAA NDFD weather · NASA FIRMS hotspots
-        ↓
-Layer 2 — Adaptive Quad-Tree Mesh + GNN Graph
-    250 m (base)  →  125 m (transition)  →  60 m (fire front)
-    60–70% memory saving vs uniform grid · 5k–50k nodes · 64-dim features
-        ↓
-Layer 3 — Dual-Path Propagation
-    ┌─────────────────────────────────────────────────────────────────┐
-    │ Path A: Differentiable CA (PyTorchFire)                        │
-    │   Rothermel R₀ · wind φ_w · slope φ_s · Huygens ellipse       │
-    │   16–22 ms/step (A100) · 30–40 ms/step (RTX 4090)             │
-    └─────────────────────────────────────────────────────────────────┘
-    ┌─────────────────────────────────────────────────────────────────┐
-    │ Path B: SpottingRefinementGNN (GAT · ~30–50k params)           │
-    │   spot_fire_prob · spread_speed_factor · direction_bias ±30°   │
-    │   Spot-fire recall: ~40% (CA alone) → ~75–80% (CA+GNN)        │
-    └─────────────────────────────────────────────────────────────────┘
-        ↓
-Layer 4 — Real-Time Calibration
-    Gradient descent on R₀ · Loss: IoU + Hausdorff · < 2 min on A100
-        ↓
-Layer 5 — Decision Support
-    Burn-probability maps · Containment-time estimates · WUI risk · Evacuation zones
-```
-
-**2020 Diablo Wind Fire benchmark**
-
-| Configuration | ms/step | IoU (6 h) | Memory |
-|---|---|---|---|
-| Pure CPU CA | 850 | 0.68 | 8.2 GB |
-| PyTorchFire GPU | 22 | 0.72 | 2.1 GB |
-| Hybrid CA + GNN | 28 | 0.78 | 2.4 GB |
-| Hybrid + calibration | 35 | **0.81** | 2.1 GB |
-
-**Status:** full specification complete · 16-week implementation roadmap ready
+**2020 Diablo Wind Fire benchmark:** hybrid CA+GNN+calibration reaches **0.81 IoU at 6 h in 35 ms/step** vs 0.68 IoU at 850 ms/step for CPU CA. Full specification complete; 16-week implementation roadmap ready.
 
 </details>
 
@@ -349,8 +163,8 @@ Open theoretical question — notes only, no implementation yet.
 - How do you keep a numerical simulation both fast and honest about its errors?
 - Can a small robot navigate using imperfect sensors and still explain its internal state?
 - When does a stochastic model of a biological network stop being a diagram and start generating real predictions?
-- Can physics-grounded simulation plus a light learned correction beat a pure neural model on speed, accuracy, and out-of-distribution generalization simultaneously?
-- How can a control system move from a simulation to a test bench without skipping the hard engineering questions between?
+- Can physics-grounded simulation plus a light learned correction beat a pure neural model on speed, accuracy, and out-of-distribution generalisation simultaneously?
+- How can a control system move from a simulation to a test bench without skipping the hard engineering questions in between?
 
 I also keep an **aerospace ideas notebook** — problems in autonomy, manufacturing, metrology, and flight systems. Some ideas are seeds, not promises; the work is figuring out which ones deserve a prototype.
 
