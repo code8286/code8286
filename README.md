@@ -1,8 +1,8 @@
 # Hiii I'm Soumo 👋
 
-### I build things that move, listen, navigate, and occasionally blow up :3
+### Navigating through life with neurodivergence
 
-I'm an undergraduate engineering student exploring **aerospace, analog and digital electronics, robotics, audio, signal processing, and scientific software**. This is my project workbench — some things are running, some are being prototyped, and some are still ambitious notes waiting to become hardware or code.
+Undergraduate engineering student exploring **aerospace, analog and digital electronics, robotics, audio, signal processing, and scientific software**. This is my project workbench — some things are running, some are being prototyped, and some are still ambitious notes waiting to become hardware or code.
 
 <p align="center">
   <a href="https://github.com/code8286?tab=repositories"><img alt="Explore my repositories" src="https://img.shields.io/badge/_Explore-Projects-2457A7?style=for-the-badge"></a>
@@ -14,22 +14,23 @@ I'm an undergraduate engineering student exploring **aerospace, analog and digit
 
 ## 🗂️ Quick Reference
 
-| # | Project | Domain | Stack | Status |
-|---|---|---|---|---|
-| 1 | [**GravBox**](https://github.com/code8286/gravbox) | Computational physics · Web | Python · JS · WASM | ✅ v1.1.0 shipped |
-| 2 | [**MedBot+**](https://github.com/akshaykumar-2008/MedBot-Plus) | Embedded robotics · Full-stack | ESP8266 · React · Node | ⚠️ Phase 2 bench testing |
-| 3 | **Active Thrust Vector Control** | Aerospace · Control systems | Python · C++ firmware | 📐 Design & planning |
-| 4 | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography | C++17 · Win32 | ✅ Built & functional |
-| 5 | **DigiAudx** | Audio DSP · Windows systems | C++20 · JUCE · WASAPI | 💡 Spec written, no code |
-| 6 | **Adaptive Noise Cancellation** | Speech enhancement · Edge AI | PyTorch · TensorRT | 📄 Research concept |
-| 7 | **Space Debris Tracking** | Aerospace · ML | Sensor fusion · ML | 📄 Research concept |
+| #   | Project                                                              | Domain                                     | Stack                           | Status                                |
+| --- | -------------------------------------------------------------------- | ------------------------------------------ | ------------------------------- | ------------------------------------- |
+| 1   | [**GravBox**](https://github.com/code8286/gravbox)                   | Computational physics · Web · Applied Math | Python · JS · WASM              | ✅ v1.1.0 shipped + 🔬 Active Research |
+| 2   | [**F.R.I.D.A.Y.**](https://github.com/code8286/F.R.I.D.A.Y..git)     | Desktop AI · Security & Agent Core         | Python 3.10+ · asyncio · SQLite | ✅ v0.1.1 (Tranche 1) shipped          |
+| 3   | [**MedBot+**](https://github.com/akshaykumar-2008/MedBot-Plus)       | Embedded robotics · Full-stack             | ESP8266 · React · Node          | ⚠️ Phase 2 bench testing              |
+| 4   | **Active Thrust Vector Control**                                     | Aerospace · Control systems                | Python · C++ firmware           | 📐 Design & planning                  |
+| 5   | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography                        | C++17 · Win32                   | ✅ Built & functional                  |
+| 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 💡 Spec written, no code              |
+| 7   | **Adaptive Noise Cancellation**                                      | Speech enhancement · Edge AI               | PyTorch · TensorRT              | 📄 Research concept                   |
+| 8   | **Space Debris Tracking**                                            | Aerospace · ML                             | Sensor fusion · ML              | 📄 Research concept                   |
 
 ---
 
 ## 🔬 Active Projects
 
 <details open>
-<summary><strong>🪐 GravBox</strong> — N-body gravitational simulator</summary>
+<summary><strong>🪐 GravBox</strong> — N-body gravitational simulator & numerical laboratory</summary>
 
 <br>
 
@@ -37,7 +38,37 @@ Interactive N-body gravity simulator for desktop and browser. Implements five nu
 
 The browser build offloads physics to a **Web Worker** backed by a **WebAssembly core** compiled from C (`gravcore.c`, 1.9 KB); numpy parity verified via fixture tests. No build step — deployed to GitHub Pages as-is.
 
+**Dual Role:** GravBox now operates as both a shipping application and an active **Applied Mathematics research topic** — studying computational integrators and numerical approximation methods that leak less energy over extended time horizons (see [Research](#-research)).
+
 **WIP:** WebGPU direct-sum backend (WGSL shader, SwiftShader-verified) targeting a `wgpu-py` / CuPy desktop path. Precision constraint established: **float32 forces + float64 state** (float32-only state degrades energy drift ~1000×). FMM vs Barnes–Hut benchmarking at 500k–1M bodies in progress.
+
+</details>
+
+---
+
+<details open>
+<summary><strong>🛡️ F.R.I.D.A.Y.</strong> — standalone desktop assistant & security-first agent core</summary>
+
+<br>
+
+A standalone, always-on desktop assistant with full host access and a security model enforced strictly in code rather than system prompts. Built with **zero third-party runtime dependencies** in the core package (optional OS `keyring` for secret storage).
+
+**Tranche 1 (v0.1.1) Shipped:**
+- **Headless Core:** `FridayCore` asyncio daemon with SQLite (WAL mode) storage, schema migrations, event bus, kill switch, and an agent loop with budget limits and turn-boundary history repair.
+- **Security Engine:** Risk tiers **T0 to T3**, multi-turn taint tracking with data envelopes, confirmation broker (single-use approvals bound to SHA-256 of exact tool + args, 60 s TTL), filesystem and SSRF access rules, hash-chained tamper-evident audit log.
+- **Guarded Memory:** Long-term SQLite FTS memory, auto-extraction from clean turns only, rolling summaries for context truncation, cross-session restoration.
+- **Model Provider & CLI:** `FridayProvider` with OpenAI-compatible codec verified against local OmniRoute gateway, offline echo provider, and full `friday` CLI (`run`, `init`, `set-secret`, `check-provider`, `verify-audit`, `memory`).
+- **Test Suite:** 194 unit tests, stdlib only, clean across Python 3.10–3.13.
+
+```
+Tranche Roadmap:
+  [✅] Tranche 1: Headless core, security engine, persistent memory, model provider & CLI
+  [📐] Tranche 2: Local tool suite (tasks, notes, alarms, filesystem, shell, web)
+  [📐] Tranche 3: Sensors & voice activation (double clap, "FRIDAY wake up", STT, TTS)
+  [📐] Tranche 4: Desktop UI (PySide6 HUD, control box, approvals dock, tray)
+  [📐] Tranche 5: Integrations (Google Calendar, RSS News, GitHub, Telegram bot)
+  [📐] Tranche 6: Native packaging (launcher, OS autostart, watchdog)
+```
 
 </details>
 
@@ -123,6 +154,21 @@ C++20 application acting as a system-wide virtual soundcard. **WASAPI loopback c
 
 ## 🔬 Research
 
+<details open>
+<summary><strong>🪐 Energy-Leaking Limitations in Computational N-Body Integrators & Training Methods</strong></summary>
+
+<br>
+
+**Domain:** Applied Mathematics · Computational Physics · Scientific ML
+
+Investigation into where and why discrete N-body algorithms lose energy conservation over time, and the design of integrators and surrogate training methods that minimise that leakage:
+- **Symplectic vs. Adaptive Formulations:** Why standard adaptive time-stepping (e.g. Dormand–Prince RK45) breaks symplecticity and introduces secular energy dissipation; time-symmetric adaptive Leapfrog as a conservative alternative.
+- **Precision Cliff:** Empirical proof that `float32` forces + `float64` state preserves symplectic energy envelopes near-identically to full `float64`, whereas `float32`-only state degrades energy drift by ~1000×.
+- **Spatial Truncation Asymmetry:** Non-conservative force errors and momentum injection in Barnes–Hut octrees (θ acceptance) vs. symmetric multipole expansions in FMM at 10⁵–10⁶ bodies.
+- **Energy-Conserving Surrogate Training:** Hamiltonian Neural Networks, Symplectic Networks, and multi-step loss regularization (ℒ = ℒ_force + λ_E |Ḣ| + λ_L ‖ΔL‖) to prevent secular energy leakage during long-horizon rollouts.
+
+</details>
+
 <details>
 <summary><strong>🧬 hPSC Gene Regulatory Network Interface</strong> — stochastic pluripotency model</summary>
 
@@ -160,10 +206,11 @@ Open theoretical question — notes only, no implementation yet.
 
 ## 🛰️ What drives all of this
 
-- How do you keep a numerical simulation both fast and honest about its errors?
+- How do you design computational integrators and training algorithms that leak less energy over extended temporal horizons?
+- How can an autonomous assistant enforce strict security boundaries in code rather than trusting prompt instructions?
 - Can a small robot navigate using imperfect sensors and still explain its internal state?
 - When does a stochastic model of a biological network stop being a diagram and start generating real predictions?
-- Can physics-grounded simulation plus a light learned correction beat a pure neural model on speed, accuracy, and out-of-distribution generalisation simultaneously?
+- Can physics-grounded simulation plus a light learned correction beat a pure neural model on speed, accuracy, and out-of-distribution generalization simultaneously?
 - How can a control system move from a simulation to a test bench without skipping the hard engineering questions in between?
 
 I also keep an **aerospace ideas notebook** — problems in autonomy, manufacturing, metrology, and flight systems. Some ideas are seeds, not promises; the work is figuring out which ones deserve a prototype.
@@ -172,7 +219,7 @@ I also keep an **aerospace ideas notebook** — problems in autonomy, manufactur
 
 ## 🛠️ Things I work with
 
-`Python` · `C/C++` · `JavaScript` · `Numerical simulation` · `Embedded systems (ESP8266/ESP32)` · `Robotics` · `DSP` · `Control systems` · `WebAssembly` · `GNU Octave / MATLAB` · `PyTorch · GNNs` · `React + Node`
+`Python` · `C/C++` · `JavaScript` · `Numerical simulation & Symplectic integrators` · `Applied Mathematics` · `asyncio & Systems architecture` · `Embedded systems (ESP8266/ESP32)` · `Robotics` · `DSP (JUCE / WASAPI)` · `Control systems` · `WebAssembly` · `GNU Octave / MATLAB` · `PyTorch · GNNs` · `React + Node · SQLite`
 
 ---
 
