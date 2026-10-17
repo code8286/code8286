@@ -2,7 +2,7 @@
 
 ### Navigating through life with neurodivergence
 
-Undergraduate engineering student exploring **aerospace, analog and digital electronics, robotics, audio, signal processing, and scientific software**. This is my project workbench — some things are running, some are being prototyped, and some are still ambitious notes waiting to become hardware or code.
+Undergraduate engineering victim exploring **aerospace, analog and digital electronics, robotics, audio, signal processing, and scientific software**. This is my project workbench — some things are running, some are being prototyped, and some are still ambitious notes waiting to become hardware or code.
 
 <p align="center">
   <a href="https://github.com/code8286?tab=repositories"><img alt="Explore my repositories" src="https://img.shields.io/badge/_Explore-Projects-2457A7?style=for-the-badge"></a>
@@ -17,12 +17,12 @@ Undergraduate engineering student exploring **aerospace, analog and digital elec
 | #   | Project                                                              | Domain                                     | Stack                           | Status                                |
 | --- | -------------------------------------------------------------------- | ------------------------------------------ | ------------------------------- | ------------------------------------- |
 | 1   | [**GravBox**](https://github.com/code8286/gravbox)                   | Computational physics · Web · Applied Math | Python · JS · WASM              | ✅ v1.1.0 shipped + 🔬 Active Research |
-| 2   | [**F.R.I.D.A.Y.**](https://github.com/code8286/F.R.I.D.A.Y..git)     | Desktop AI · Security & Agent Core         | Python 3.10+ · asyncio · SQLite | ✅ v0.1.1 (Tranche 1) shipped          |
+| 2   | [**F.R.I.D.A.Y.**](https://github.com/code8286/F.R.I.D.A.Y..git)     | Desktop AI · Security & Agent Core         | Python 3.10+ · asyncio · SQLite | ✅ v0.4.0 (Tranches 1–4) shipped       |
 | 3   | [**MedBot+**](https://github.com/akshaykumar-2008/MedBot-Plus)       | Embedded robotics · Full-stack             | ESP8266 · React · Node          | ⚠️ Phase 2 bench testing              |
 | 4   | **Active Thrust Vector Control**                                     | Aerospace · Control systems                | Python · C++ firmware           | 📐 Design & planning                  |
 | 5   | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography                        | C++17 · Win32                   | ✅ Built & functional                  |
-| 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 💡 Spec written, no code              |
-| 7   | **Adaptive Noise Cancellation**                                      | Speech enhancement · Edge AI               | PyTorch · TensorRT              | 📄 Research concept                   |
+| 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 🔧 Beta version implementation        |
+| 7   | **GNNs in Neural Cellular Automata**                                 | ML · GNNs · Language Model Initialization | Python · PyTorch · GPU          | 🔬 v2 GPU run complete — v3 pending   |
 | 8   | **Space Debris Tracking**                                            | Aerospace · ML                             | Sensor fusion · ML              | 📄 Research concept                   |
 
 ---
@@ -53,21 +53,26 @@ The browser build offloads physics to a **Web Worker** backed by a **WebAssembly
 
 A standalone, always-on desktop assistant with full host access and a security model enforced strictly in code rather than system prompts. Built with **zero third-party runtime dependencies** in the core package (optional OS `keyring` for secret storage).
 
-**Tranche 1 (v0.1.1) Shipped:**
+**Released: v0.4.0, Tranches 1–4** — headless core, security engine, persistent memory, model provider & CLI, local tool suite, voice activation, and the full desktop UI. Tranches 5 and 6 are built but not yet versioned.
+
+**Shipped (Tranches 1–4):**
 - **Headless Core:** `FridayCore` asyncio daemon with SQLite (WAL mode) storage, schema migrations, event bus, kill switch, and an agent loop with budget limits and turn-boundary history repair.
 - **Security Engine:** Risk tiers **T0 to T3**, multi-turn taint tracking with data envelopes, confirmation broker (single-use approvals bound to SHA-256 of exact tool + args, 60 s TTL), filesystem and SSRF access rules, hash-chained tamper-evident audit log.
 - **Guarded Memory:** Long-term SQLite FTS memory, auto-extraction from clean turns only, rolling summaries for context truncation, cross-session restoration.
-- **Model Provider & CLI:** `FridayProvider` with OpenAI-compatible codec verified against local OmniRoute gateway, offline echo provider, and full `friday` CLI (`run`, `init`, `set-secret`, `check-provider`, `verify-audit`, `memory`).
-- **Test Suite:** 194 unit tests, stdlib only, clean across Python 3.10–3.13.
+- **Model Provider & CLI:** `FridayProvider` with OpenAI-compatible codec verified against local OmniRoute gateway, offline echo provider, and full `friday` CLI (`run`, `init`, `set-secret`, `check-provider`, `verify-audit`, `memory`, and more).
+- **Local Tools:** Tasks, notes, reminders/alarms (persistent scheduler), filesystem with undo journal and trash, shell tool, web fetcher pinned against SSRF.
+- **Voice (optional):** Double-clap detector, "FRIDAY wake up" phrase (Vosk), VAD, local STT (faster-whisper), spoken replies (ElevenLabs or system voice). Half-duplex with barge-in.
+- **Desktop UI:** PySide6/QML frontpage — HUD ring, eight live tiles, console with tool-activity feed and approval dock, Notes/Memories/Settings panels, kill-switch button, system-tray icon.
+- **Test Suite:** 751 unit tests, stdlib only, clean across Python 3.10–3.13.
 
 ```
 Tranche Roadmap:
   [✅] Tranche 1: Headless core, security engine, persistent memory, model provider & CLI
-  [📐] Tranche 2: Local tool suite (tasks, notes, alarms, filesystem, shell, web)
-  [📐] Tranche 3: Sensors & voice activation (double clap, "FRIDAY wake up", STT, TTS)
-  [📐] Tranche 4: Desktop UI (PySide6 HUD, control box, approvals dock, tray)
-  [📐] Tranche 5: Integrations (Google Calendar, RSS News, GitHub, Telegram bot)
-  [📐] Tranche 6: Native packaging (launcher, OS autostart, watchdog)
+  [✅] Tranche 2: Local tools (tasks, notes, alarms, filesystem, shell, web)
+  [✅] Tranche 3: Sensors & voice activation (double clap, "FRIDAY wake up", STT, TTS)
+  [✅] Tranche 4: Desktop UI (PySide6 HUD, control box, approvals dock, tray)
+  [🔧] Tranche 5: Integrations (Google Calendar, RSS News, GitHub) — built, not released
+  [🔧] Tranche 6: Native packaging (launcher, OS autostart, watchdog) + Android app — built, not released
 ```
 
 </details>
@@ -126,14 +131,18 @@ The **encoder** synthesises Morse WAV audio and hides a payload in inter-gap tim
 
 ---
 
-## 💡 In the Pipeline
+## 🔧 Beta Implementation
 
-<details>
+<details open>
 <summary><strong>🔊 DigiAudx</strong> — Windows system-wide audio DSP engine</summary>
 
 <br>
 
-C++20 application acting as a system-wide virtual soundcard. **WASAPI loopback capture** feeds a real-time DSP chain — zero heap allocation on the audio thread — before output via `IAudioRenderClient`. Chain: 9-band IIR graphic EQ · **Linkwitz-Riley crossover timbre exciter** (harmonic generation above 4 kHz) · lookahead brickwall limiter + soft-knee compressor · **psychoacoustic bass enhancer** (sub-120 Hz upper-harmonic generation). State managed via **JUCE APVTS**; 30 FPS FFT spectrum visualiser over a lock-free FIFO on the GUI thread. Full engineering spec and module breakdown written. No code yet.
+C++20 application acting as a system-wide virtual soundcard. **WASAPI loopback capture** feeds a real-time DSP chain — zero heap allocation on the audio thread — before output via `IAudioRenderClient`. Chain: 9-band parametric IIR graphic EQ · **Linkwitz-Riley crossover timbre exciter** (harmonic generation above 4 kHz) · lookahead brickwall limiter + soft-knee compressor · **psychoacoustic bass enhancer** (sub-120 Hz upper-harmonic generation). State managed via **JUCE APVTS**; 30 FPS FFT spectrum visualiser over a lock-free FIFO on the GUI thread.
+
+**Beta implementation — what's working:** JUCE desktop application with dark responsive control surface, endpoint discovery, event-driven WASAPI loopback capture and render for matching stereo float endpoints, nine-band parametric EQ, high-frequency exciter, psychoacoustic bass enhancement, stereo width, gain, lookahead limiting, persistent power and EQ parameters, lock-free audio sample FIFO feeding a 30 FPS spectrum view, DSP smoke test, and Windows CI. Full engineering spec and module breakdown written.
+
+**Audio routing:** WASAPI loopback captures the mix already playing through a render endpoint — it cannot intercept and replace that endpoint's output. A virtual audio device (separate Windows driver project) is required to route arbitrary app audio through the DSP chain; the scaffold deliberately rejects selecting the same endpoint for input and output.
 
 </details>
 
@@ -190,6 +199,61 @@ Key results: Newton–Raphson fixed-point search recovers **genuine tristability
 5-layer hybrid wildfire prediction system fusing USGS DEM terrain, LANDFIRE fuel models, NOAA NDFD weather, and NASA FIRMS satellite hotspots. A **differentiable cellular automaton** (PyTorchFire, GPU) implements the Rothermel spread model with Huygens elliptical anisotropy; a lightweight **Graph Attention Network** (~30–50k params) runs in parallel on an adaptive quad-tree mesh (250 m → 60 m near fire front, 60–70% memory saving vs uniform grid) to output per-node spot-fire probability, spread-speed correction, and direction bias — recovering **~75–80% spot-fire recall vs ~40% for CA alone**. **Real-time gradient-descent calibration** fits Rothermel R₀ to satellite fire boundaries (IoU + Hausdorff loss) in under 2 min on an A100.
 
 **2020 Diablo Wind Fire benchmark:** hybrid CA+GNN+calibration reaches **0.81 IoU at 6 h in 35 ms/step** vs 0.68 IoU at 850 ms/step for CPU CA. Full specification complete; 16-week implementation roadmap ready.
+
+</details>
+
+<details>
+<summary><strong>🧠 GNNs in Neural Cellular Automata</strong> — graph-topology pre-pre-training study</summary>
+
+<br>
+
+**Domain:** Machine Learning · Graph Neural Networks · Language Model Initialization
+
+Independent small-scale study testing whether **graph-NCA synthetic trajectories can improve a transformer's initialization before language pre-training** (pre-pre-training, PPT). The GNN is a frozen random-rule data generator — not a component inside the language model. The study compares graph, grid, and shuffled synthetic trajectories as PPT sources, then feeds all arms into the same downstream language training stage.
+
+Reference: [Training Language Models via Neural Cellular Automata, v1](https://arxiv.org/html/2603.10055v1) · [Author code](https://github.com/danihyunlee/nca-pre-pretraining) (pinned revision `bdd1c71e`, 12 Mar 2026).
+
+**Model:** Small Llama-style transformer — 4.58M-param synthetic model / 12.31M-param language model (different embedding tables for the two vocabularies). 274 shared output symbols: 256 bytes + 16 binary patch symbols + 2 frame markers. Byte perplexity target: 2.5 validation nats/byte.
+
+**Experimental design (v2 / v3):**
+
+```
+Arms entering the same N-update language stage:
+  scratch       — no PPT, language training from random init
+  grid_nca      — K synthetic updates on periodic grid trajectories → language
+  graph_nca     — K synthetic updates on rewired graph trajectories → language
+  shuffled_grid — frequency-preserving shuffled grid trajectories → language
+  shuffled_graph — frequency-preserving shuffled graph trajectories → language
+
+Key controls: identical language data order, optimizer init, LR schedule,
+batch/context, and evaluation across all arms. Language heads restored to
+initial values at the PPT/language boundary.
+```
+
+**v2 GPU result (Tesla T4, Oct 2026)** — grid and shuffled, 3 paired seeds, 1000 PPT + 2000 language updates:
+
+| Initialization | Mean final val NLL | Geometric language-token speedup | Geometric cumulative-time speedup |
+|---|---|---|---|
+| Scratch / no PPT | 5.266091 | 1.000× | 1.000× |
+| Grid NCA | 5.233321 | **1.178×** | 0.886× |
+| Shuffled NCA | 5.231528 | **1.178×** | 0.883× |
+
+Grid first reached the scratch reference at 1800 / 1600 / 1700 language updates; shuffled at 1700 / 1600 / 1800. All 15 checkpoints passed independent CPU replay (max loss discrepancy 1.96 × 10⁻⁷). Comparable shuffled gains leave the NCA-dynamics-specific benefit unresolved. Cumulative time ~13% higher for grid — cost recovery not demonstrated. No graph treatment in v2; official test unused.
+
+**Methodology notes:**
+- Pilot 1 was a matched-total-budget design (scratch got 1000 text updates; NCA arms got 100 synthetic + 900 text) — a different question than transfer, with a scheduler confound on the language-exposure axis. Negative result is valid for that design, not a rejection of PPT.
+- v2 corrects this: separate `ppt_steps=1000` and `language_steps=2000`; scratch skips PPT entirely and starts its language optimizer at step zero alongside transferred inits.
+- Rule filtering (complexity band) and burn-in added in v2 to match the reference. ~36% of unfiltered graph / ~36% of unfiltered grid trajectories reach a fixed point (trivial late dynamics) — filtering is necessary.
+
+**Formal verification:** LaTeX mathematical note develops graph-NCA theory, transfer conditions, proofs, counterexamples. Lean 4.35.0 folder contains 44 checked theorem statements; coverage partial — entropy, spectral, and Taylor remainder arguments remain informal.
+
+**Next — v3 (graph vs grid, GPU run pending):**
+- Five arms: no-PPT, grid, graph, shuffled-grid, shuffled-graph
+- Three paired seeds with independent rule caches and topologies; grid and graph share frozen rule weights and paired random draws, same complexity filter
+- Graph changes donor connectivity while preserving degrees and ordered slots
+- Primary comparison: graph-PPT vs grid-PPT; graph vs its shuffled control isolates ordered-trajectory structure
+- Both grid and graph must pass synthetic gate before any language run
+- Upload `kaggle_nca_transfer_v3.ipynb` to Kaggle, enable GPU + Internet, Run All → exports `nca_transfer_v3_results_<timestamp>.zip`
 
 </details>
 
