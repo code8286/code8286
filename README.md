@@ -22,7 +22,7 @@ Undergraduate engineering victim exploring **aerospace, analog and digital elect
 | 4   | **Active Thrust Vector Control**                                     | Aerospace · Control systems                | Python · C++ firmware           | 📐 Design & planning                  |
 | 5   | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography                        | C++17 · Win32                   | ✅ Built & functional                  |
 | 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 🔧 Beta version implementation        |
-| 7   | **GNNs in Neural Cellular Automata**                                 | ML · GNNs · Language Model Initialization | Python · PyTorch · GPU          | 🔬 v2 GPU run complete — v3 pending   |
+| 7   | [**GNNs in Neural Cellular Automata**](https://github.com/code8286/GPU_NCA_proofer.git)                                 | ML · GNNs · Language Model Initialization | Python · PyTorch · GPU          | 🔬 v2 GPU run complete — v3 pending   |
 | 8   | **Space Debris Tracking**                                            | Aerospace · ML                             | Sensor fusion · ML              | 📄 Research concept                   |
 
 ---
