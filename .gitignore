@@ -2,5 +2,4 @@
 *
 
 # Allow the specific file (e.g., config.json)
-!~/Projects/README.md
 !.gitignore
