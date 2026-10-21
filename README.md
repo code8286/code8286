@@ -14,16 +14,17 @@ Undergraduate engineering victim exploring **aerospace, analog and digital elect
 
 ## 🗂️ Quick Reference
 
-| #   | Project                                                              | Domain                                     | Stack                           | Status                                |
-| --- | -------------------------------------------------------------------- | ------------------------------------------ | ------------------------------- | ------------------------------------- |
-| 1   | [**GravBox**](https://github.com/code8286/gravbox)                   | Computational physics · Web · Applied Math | Python · JS · WASM              | ✅ v1.1.0 shipped + 🔬 Active Research |
-| 2   | [**F.R.I.D.A.Y.**](https://github.com/code8286/F.R.I.D.A.Y..git)     | Desktop AI · Security & Agent Core         | Python 3.10+ · asyncio · SQLite | ✅ v0.4.0 (Tranches 1–4) shipped       |
-| 3   | [**MedBot+**](https://github.com/akshaykumar-2008/MedBot-Plus)       | Embedded robotics · Full-stack             | ESP8266 · React · Node          | ⚠️ Phase 2 bench testing              |
-| 4   | **Active Thrust Vector Control**                                     | Aerospace · Control systems                | Python · C++ firmware           | 📐 Design & planning                  |
-| 5   | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography                        | C++17 · Win32                   | ✅ Built & functional                  |
-| 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 🔧 Beta version implementation        |
-| 7   | **GNNs in Neural Cellular Automata**                                 | ML · GNNs · Language Model Initialization | Python · PyTorch · GPU          | 🔬 v2 GPU run complete — v3 pending   |
-| 8   | **Space Debris Tracking**                                            | Aerospace · ML                             | Sensor fusion · ML              | 📄 Research concept                   |
+| #   | Project                                                              | Domain                                     | Stack                           | Status                                         |
+| --- | -------------------------------------------------------------------- | ------------------------------------------ | ------------------------------- | ---------------------------------------------- |
+| 1   | [**GravBox**](https://github.com/code8286/gravbox)                   | Computational physics · Web · Applied Math | Python · JS · WASM              | ✅ v1.1.0 shipped + 🔬 Active Research          |
+| 2   | [**F.R.I.D.A.Y.**](https://github.com/code8286/F.R.I.D.A.Y..git)     | Desktop AI · Security & Agent Core         | Python 3.10+ · asyncio · SQLite | 🔧 Tranches 5–6 built, not versioned           |
+| 3   | [**MedBot+**](https://github.com/akshaykumar-2008/MedBot-Plus)       | Embedded robotics · Full-stack             | ESP8266 · React · Node          | ⚠️ Phase 2 bench testing                       |
+| 4   | **Active Thrust Vector Control**                                     | Aerospace · Control systems                | Python · C++ firmware           | 📐 Design & planning                           |
+| 5   | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography                        | C++17 · Win32                   | ✅ Built & functional                           |
+| 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 🔧 Beta version implementation                 |
+| 7   | **GNNs in Neural Cellular Automata**                                 | ML · GNNs · Language Model Initialization  | Python · PyTorch · GPU          | 🔬 v4 GPU done; v5–v9 CPU diagnostics complete |
+| 8   | **Space Debris Tracking**                                            | Aerospace · ML                             | Sensor fusion · ML              | 📄 Research concept                            |
+| 9   | **MPC Drone**                                                        | Aerospace · Control systems                | MATLAB · Simulink               | 🔧 Simulation prototype                        |
 
 ---
 
@@ -42,6 +43,8 @@ The browser build offloads physics to a **Web Worker** backed by a **WebAssembly
 
 **WIP:** WebGPU direct-sum backend (WGSL shader, SwiftShader-verified) targeting a `wgpu-py` / CuPy desktop path. Precision constraint established: **float32 forces + float64 state** (float32-only state degrades energy drift ~1000×). FMM vs Barnes–Hut benchmarking at 500k–1M bodies in progress.
 
+**TreePM prototype (Oct 2026):** Full 72-measurement 500k–1M validation campaign completed — **production no-go**. 45/72 pass accuracy, 46 qualify for timing; all five eligible sphere matched comparisons fail the twofold speed target (TreePM 9.8–19.4× slower than BH). All 18 disk BH settings fail force accuracy; no matched disk comparison exists. Conditional application-adapter design delivered; no production backend enabled. See `Projects/N-body Gravitation/gravbox/WIP/treepm-prototype/COMPLETION_STATUS.md` and `FINAL_VALIDATION_ASSESSMENT.md`.
+
 </details>
 
 ---
@@ -53,7 +56,7 @@ The browser build offloads physics to a **Web Worker** backed by a **WebAssembly
 
 A standalone, always-on desktop assistant with full host access and a security model enforced strictly in code rather than system prompts. Built with **zero third-party runtime dependencies** in the core package (optional OS `keyring` for secret storage).
 
-**Released: v0.4.0, Tranches 1–4** — headless core, security engine, persistent memory, model provider & CLI, local tool suite, voice activation, and the full desktop UI. Tranches 5 and 6 are built but not yet versioned.
+**Released: v0.4.0, Tranches 1–4** — headless core, security engine, persistent memory, model provider & CLI, local tool suite, voice activation, and the full desktop UI. Tranches 5 and 6 are built but not yet versioned (would be v0.6.0).
 
 **Shipped (Tranches 1–4):**
 - **Headless Core:** `FridayCore` asyncio daemon with SQLite (WAL mode) storage, schema migrations, event bus, kill switch, and an agent loop with budget limits and turn-boundary history repair.
@@ -72,7 +75,10 @@ Tranche Roadmap:
   [✅] Tranche 3: Sensors & voice activation (double clap, "FRIDAY wake up", STT, TTS)
   [✅] Tranche 4: Desktop UI (PySide6 HUD, control box, approvals dock, tray)
   [🔧] Tranche 5: Integrations (Google Calendar, RSS News, GitHub) — built, not released
+       + Telegram bot dropped; replaced by Android companion channel
   [🔧] Tranche 6: Native packaging (launcher, OS autostart, watchdog) + Android app — built, not released
+       + Phone channel (WebSocket, TLS 1.3, pairing, biometric approvals)
+       + Android app (Kotlin + Compose, Android 12+) — protocol tested; Compose UI not compiled yet
 ```
 
 </details>
@@ -147,6 +153,17 @@ C++20 application acting as a system-wide virtual soundcard. **WASAPI loopback c
 </details>
 
 <details>
+<summary><strong>🚁 MPC Drone</strong> — quadrotor 6-DOF simulation & cascaded PD controller prototype</summary>
+
+<br>
+
+MATLAB quadrotor simulation for control-law development. 12-state 6-DOF model (position, velocity, Euler angles, body rates) integrated via ODE45. A **cascaded PD controller** handles outer-loop position (desired thrust + roll/pitch commands) and inner-loop attitude (body torques), with a full rotation matrix R_IB and Euler-angle-rate kinematics (W matrix). Simulink `multirotor` object configured in parallel with matching mass (1.2 kg), inertia, and drag coefficients.
+
+**Next:** Replace cascaded PD with proper MPC; add actuator dynamics and rotor speed limits; validate against hardware.
+
+</details>
+
+<details>
 <summary><strong>🧠 Concepts queued</strong></summary>
 
 <br>
@@ -188,6 +205,8 @@ Stochastic nonlinear dynamical model of human pluripotent stem-cell fate. The OC
 Key results: Newton–Raphson fixed-point search recovers **genuine tristability** (3 stable + 2 saddle fixed points at κ = 1.6); κ-bifurcation sweep shows tristability robust for κ ≳ 0.6 across a >4× parameter range with a pitchfork-type stability-exchange near κ ≈ 0.38 bracketed by two saddle-node annihilations — richer than the textbook single-pitchfork picture. **Waddington quasi-potential** reconstructed from a 70-trajectory CLE ensemble; Hessian curvature cross-checked via exact **Lyapunov route** (stable wells) and empirical histogram route — discrepancy attributed to finite-bin + kernel smoothing, documented explicitly.
 
 **Next:** explicit GATA6 third axis · bursting-aware CLE (Kursawe–Galla 2025) · L1-regularised **W** from scRNA-seq + scATAC-seq · transition-path barrier heights → iPSC reprogramming first-passage times.
+
+**Patent readiness (15 Oct 2026 review):** Not established — needs scientific corrections, reproducibility improvements, and prior-art comparison before IDF submission. Original files and enabling details kept in confidential channels pending Cell clearance.
 
 </details>
 
@@ -240,20 +259,42 @@ initial values at the PPT/language boundary.
 
 Grid first reached the scratch reference at 1800 / 1600 / 1700 language updates; shuffled at 1700 / 1600 / 1800. All 15 checkpoints passed independent CPU replay (max loss discrepancy 1.96 × 10⁻⁷). Comparable shuffled gains leave the NCA-dynamics-specific benefit unresolved. Cumulative time ~13% higher for grid — cost recovery not demonstrated. No graph treatment in v2; official test unused.
 
-**Methodology notes:**
-- Pilot 1 was a matched-total-budget design (scratch got 1000 text updates; NCA arms got 100 synthetic + 900 text) — a different question than transfer, with a scheduler confound on the language-exposure axis. Negative result is valid for that design, not a rejection of PPT.
-- v2 corrects this: separate `ppt_steps=1000` and `language_steps=2000`; scratch skips PPT entirely and starts its language optimizer at step zero alongside transferred inits.
-- Rule filtering (complexity band) and burn-in added in v2 to match the reference. ~36% of unfiltered graph / ~36% of unfiltered grid trajectories reach a fixed point (trivial late dynamics) — filtering is necessary.
+**v3 GPU result (Tesla T4, Oct 2026)** — five arms, 3 paired seeds, 1000 PPT + 2000 language updates:
 
-**Formal verification:** LaTeX mathematical note develops graph-NCA theory, transfer conditions, proofs, counterexamples. Lean 4.35.0 folder contains 44 checked theorem statements; coverage partial — entropy, spectral, and Taylor remainder arguments remain informal.
+| Initialization | Mean final val NLL | Geometric language-token speedup vs scratch | Geometric cumulative-time speedup vs scratch |
+|---|---|---|---|
+| Scratch / no PPT | 5.266091 | 1.000× | 1.000× |
+| Grid NCA | 5.237811 | 1.112× | 0.838× |
+| Graph NCA | 5.232262 | **1.178×** | 0.872× |
+| Shuffled grid | 5.234889 | 1.112× | 0.835× |
+| Shuffled graph | 5.234889 | 1.134× | 0.846× |
 
-**Next — v3 (graph vs grid, GPU run pending):**
-- Five arms: no-PPT, grid, graph, shuffled-grid, shuffled-graph
-- Three paired seeds with independent rule caches and topologies; grid and graph share frozen rule weights and paired random draws, same complexity filter
-- Graph changes donor connectivity while preserving degrees and ordered slots
-- Primary comparison: graph-PPT vs grid-PPT; graph vs its shuffled control isolates ordered-trajectory structure
-- Both grid and graph must pass synthetic gate before any language run
-- Upload `kaggle_nca_transfer_v3.ipynb` to Kaggle, enable GPU + Internet, Run All → exports `nca_transfer_v3_results_<timestamp>.zip`
+Graph reached the paired grid endpoint at 1800 / 2000 / not reached for seeds 17 / 29 / 43 — primary all-seed speedup censored. Small average gain does not establish consistent topology-specific acceleration. Cumulative time ~14.7% higher for graph. All 27 stage checkpoints passed CPU replay (max discrepancy 1.86 × 10⁻⁷). Official test unused.
+
+**v4 GPU result (Tesla T4, Oct 2026)** — seven arms with prefix-matched shuffled controls, 6 fresh paired cohorts:
+
+| Initialization | Mean final val NLL | Language-token speedup vs scratch | Cumulative-time speedup vs scratch |
+|---|---|---|---|
+| Scratch | 5.273956 | 1.000× | 1.000× |
+| Grid | 5.230608 | 1.165× | 0.864× |
+| Graph | 5.234337 | 1.154× | 0.858× |
+| Original shuffled grid | 5.236298 | 1.144× | 0.852× |
+| Original shuffled graph | 5.234172 | 1.166× | 0.864× |
+| Prefix-matched shuffled grid | 5.235063 | 1.167× | 0.865× |
+| Prefix-matched shuffled graph | 5.235680 | 1.154× | 0.858× |
+
+**Both frozen primary graph comparisons fail** — graph/grid: 5 token ties and 1 loss (ratio 0.990×, p=1); graph/prefix-graph: 4 ties, 1 win, 1 loss (1.000×, p=0.984). Graph uses ~13.4% fewer language tokens at the scratch target but ~16.6% more cumulative time. All 78 stage checkpoints passed CPU replay (max discrepancy 2.78 × 10⁻⁷). A post-hoc causal frequency predictor beats all 12 structured PPT models on held-out patch targets — the original unigram/copy gate is insufficient to establish dynamics-specific learning.
+
+**CPU diagnostic stages (v5–v9, Oct 2026):**
+- **Stage 5 — readiness:** All 12 v4 PPT cohorts fail both 0.01-nat readiness margins; language guard rejects them.
+- **Stage 6 — trainability:** Full backbone learns binary complement rule — 3/3 coherent seeds pass, 100% held-out accuracy.
+- **Stage 7 — spatial bridge:** Neighbor-parity rule; accuracy 91.84%. Supplementary first-transition diagnostic: original/intervention accuracy 47.40% / 42.08%; both correct in only 19.95% of eligible pairs — partial rule learning only.
+- **Stage 8 — loss weighting:** Sixfold first-transition weighting worsens all 3 coherent seeds on original and intervened first-patch NLL. Full-trajectory readiness still passes, confirming trajectory gates cannot establish first-transition competence.
+- **Stage 9 — fit vs generalization:** No new training; all 15 checkpoints re-scored on train/dev/assessment splits. Seeds 149/167 improve training NLL with weighting but worsen on held-out splits; seed 131 worsens everywhere. Four-patch assessment accuracy rises 42.90% → 46.48% with weighting despite first-patch regression.
+
+Local suite: 122 tests passing. **Formal verification:** LaTeX note + Lean 4.35.0, 44 checked theorem statements; coverage partial — entropy, spectral, and Taylor remainder arguments remain informal.
+
+**Next:** Initial-condition diversity ablation — separately frozen, not yet configured.
 
 </details>
 
@@ -277,13 +318,13 @@ Open theoretical question — notes only, no implementation yet.
 - Can physics-grounded simulation plus a light learned correction beat a pure neural model on speed, accuracy, and out-of-distribution generalization simultaneously?
 - How can a control system move from a simulation to a test bench without skipping the hard engineering questions in between?
 
-I also keep an **aerospace ideas notebook** — problems in autonomy, manufacturing, metrology, and flight systems. Some ideas are seeds, not promises; the work is figuring out which ones deserve a prototype.
+I also keep an **ideas notebook** — problems in autonomy, manufacturing, metrology, and flight systems. Some ideas are seeds, not promises; the work is figuring out which ones deserve a prototype.
 
 ---
 
 ## 🛠️ Things I work with
 
-`Python` · `C/C++` · `JavaScript` · `Numerical simulation & Symplectic integrators` · `Applied Mathematics` · `asyncio & Systems architecture` · `Embedded systems (ESP8266/ESP32)` · `Robotics` · `DSP (JUCE / WASAPI)` · `Control systems` · `WebAssembly` · `GNU Octave / MATLAB` · `PyTorch · GNNs` · `React + Node · SQLite`
+`Python` · `C/C++` · `JavaScript` · `Numerical simulation & Symplectic integrators` · `Applied Mathematics` · `asyncio & Systems architecture` · `Embedded systems (ESP8266/ESP32)` · `Robotics` · `DSP (JUCE / WASAPI)` · `Control systems` · `WebAssembly` · `GNU Octave / MATLAB / Simulink` · `PyTorch · GNNs` · `React + Node · SQLite`
 
 ---
 
