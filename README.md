@@ -14,17 +14,17 @@ Undergraduate engineering victim exploring **aerospace, analog and digital elect
 
 ## 🗂️ Quick Reference
 
-| #   | Project                                                              | Domain                                     | Stack                           | Status                                         |
-| --- | -------------------------------------------------------------------- | ------------------------------------------ | ------------------------------- | ---------------------------------------------- |
-| 1   | [**GravBox**](https://github.com/code8286/gravbox)                   | Computational physics · Web · Applied Math | Python · JS · WASM              | ✅ v1.1.0 shipped + 🔬 Active Research          |
-| 2   | [**F.R.I.D.A.Y.**](https://github.com/code8286/F.R.I.D.A.Y..git)     | Desktop AI · Security & Agent Core         | Python 3.10+ · asyncio · SQLite | 🔧 Tranches 5–6 built, not versioned           |
-| 3   | [**MedBot+**](https://github.com/akshaykumar-2008/MedBot-Plus)       | Embedded robotics · Full-stack             | ESP8266 · React · Node          | ⚠️ Phase 2 bench testing                       |
-| 4   | **Active Thrust Vector Control**                                     | Aerospace · Control systems                | Python · C++ firmware           | 📐 Design & planning                           |
-| 5   | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography                        | C++17 · Win32                   | ✅ Built & functional                           |
-| 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 🔧 Beta version implementation                 |
-| 7   | **GNNs in Neural Cellular Automata**                                 | ML · GNNs · Language Model Initialization  | Python · PyTorch · GPU          | 🔬 v4 GPU done; v5–v9 CPU diagnostics complete |
-| 8   | **Space Debris Tracking**                                            | Aerospace · ML                             | Sensor fusion · ML              | 📄 Research concept                            |
-| 9   | **MPC Drone**                                                        | Aerospace · Control systems                | MATLAB · Simulink               | 🔧 Simulation prototype                        |
+| #   | Project                                                              | Domain                                     | Stack                           | Status                                                           |
+| --- | -------------------------------------------------------------------- | ------------------------------------------ | ------------------------------- | ---------------------------------------------------------------- |
+| 1   | [**GravBox**](https://github.com/code8286/gravbox)                   | Computational physics · Web · Applied Math | Python · JS · WASM              | ✅ v1.1.0 shipped + 🔬 Active Research                           |
+| 2   | [**F.R.I.D.A.Y.**](https://github.com/code8286/F.R.I.D.A.Y..git)     | Desktop AI · Security & Agent Core         | Python 3.10+ · asyncio · SQLite | 🔧 Tranches 5–6 built, not versioned                             |
+| 3   | [**MedBot+**](https://github.com/akshaykumar-2008/MedBot-Plus)       | Embedded robotics · Full-stack             | ESP8266 · React · Node          | ⚠️ Phase 2 bench testing                                         |
+| 4   | **Active Thrust Vector Control**                                     | Aerospace · Control systems                | Python · C++ firmware           | 📐 Design & planning                                             |
+| 5   | [**Morse Analyser**](https://github.com/code8286/morse_analyser.git) | DSP · Steganography                        | C++17 · Win32                   | ✅ Built & functional                                             |
+| 6   | **DigiAudx**                                                         | Audio DSP · Windows systems                | C++20 · JUCE · WASAPI           | 🔧 Beta version implementation                                   |
+| 7   | [**GNNs in Neural Cellular Automata**](https://github.com/code8286/GPU_NCA_proofer.git) | ML · GNNs · Language Model Initialization | Python · PyTorch · GPU          | 🔬 v4 GPU done; v5–v11 CPU diagnostics complete                 |
+| 8   | **Space Debris Tracking**                                            | Aerospace · ML                             | Sensor fusion · ML              | 📄 Research concept                                              |
+| 9   | **MPC Drone**                                                        | Aerospace · Control systems                | MATLAB · Simulink               | 🔧 Simulation prototype                                          |
 
 ---
 
@@ -285,16 +285,18 @@ Graph reached the paired grid endpoint at 1800 / 2000 / not reached for seeds 17
 
 **Both frozen primary graph comparisons fail** — graph/grid: 5 token ties and 1 loss (ratio 0.990×, p=1); graph/prefix-graph: 4 ties, 1 win, 1 loss (1.000×, p=0.984). Graph uses ~13.4% fewer language tokens at the scratch target but ~16.6% more cumulative time. All 78 stage checkpoints passed CPU replay (max discrepancy 2.78 × 10⁻⁷). A post-hoc causal frequency predictor beats all 12 structured PPT models on held-out patch targets — the original unigram/copy gate is insufficient to establish dynamics-specific learning.
 
-**CPU diagnostic stages (v5–v9, Oct 2026):**
-- **Stage 5 — readiness:** All 12 v4 PPT cohorts fail both 0.01-nat readiness margins; language guard rejects them.
+**CPU diagnostic stages (v5–v11, Oct 2026):**
+- **Stage 5 — readiness:** All 12 v4 PPT cohorts fail both 0.01-nat margins; language guard rejects them.
 - **Stage 6 — trainability:** Full backbone learns binary complement rule — 3/3 coherent seeds pass, 100% held-out accuracy.
 - **Stage 7 — spatial bridge:** Neighbor-parity rule; accuracy 91.84%. Supplementary first-transition diagnostic: original/intervention accuracy 47.40% / 42.08%; both correct in only 19.95% of eligible pairs — partial rule learning only.
 - **Stage 8 — loss weighting:** Sixfold first-transition weighting worsens all 3 coherent seeds on original and intervened first-patch NLL. Full-trajectory readiness still passes, confirming trajectory gates cannot establish first-transition competence.
 - **Stage 9 — fit vs generalization:** No new training; all 15 checkpoints re-scored on train/dev/assessment splits. Seeds 149/167 improve training NLL with weighting but worsen on held-out splits; seed 131 worsens everywhere. Four-patch assessment accuracy rises 42.90% → 46.48% with weighting despite first-patch regression.
+- **Stage 10 — initial-condition diversity:** 512 → 4096 training-condition ablation. Study-wide primary **fails**; weighted stratum **passes** (3/3 seeds), standard stratum fails. Larger-cache weighted arm improves first-patch and intervention NLL; standard arm regresses in 2/3 seeds. Language remains gated.
+- **Stage 11 — fresh-phase confirmation:** Weighted primary confirmed prospectively on fresh phase-disjoint data (4,926 historical classes excluded). Weighted confirmation **passes** (3/3 seeds); standard stratum fails 2/3; broader both-objective criterion **fails**. This confirms one predeclared endpoint on a known binary rule — does not authorize a language suite.
 
-Local suite: 122 tests passing. **Formal verification:** LaTeX note + Lean 4.35.0, 44 checked theorem statements; coverage partial — entropy, spectral, and Taylor remainder arguments remain informal.
+Local suite: 146 tests passing. **Formal verification:** LaTeX note + Lean 4.35.0, 44 checked theorem statements; coverage partial — entropy, spectral, and Taylor remainder arguments remain informal. Research manuscript (23 pp., 28 equations, 16 tables, 8 figures) compiled through stage 9.
 
-**Next:** Initial-condition diversity ablation — separately frozen, not yet configured.
+**Next:** Bridge toward interacting categorical rules — one task property changed at a time, both objectives and shuffled controls retained.
 
 </details>
 
